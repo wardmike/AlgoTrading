@@ -8,7 +8,12 @@ from quantopian.pipeline.factors import AverageDollarVolume
 from quantopian.pipeline.filters.morningstar import Q500US
  
 def initialize(context):
-    print context
+    print "hello world"
+    print "context: ", context
+    context.aapl = sid(24)
+    context.goog = sid(46631)
+    context.fb = sid(42950)
+    print "new context: ", context
     """
     Called once at the start of the algorithm.
     """   
@@ -54,7 +59,7 @@ def my_assign_weights(context, data):
     """
     Assign weights to securities that we want to order.
     """
-    pass
+    pass #means to be written later
  
 def my_rebalance(context,data):
     """
@@ -72,5 +77,22 @@ def handle_data(context,data):
     """
     Called every minute.
     """
-    pass
+    print context.aapl
+    print context.goog
+    curr_aapl_price = data.current(context.aapl, "price")
+    curr_goog_price = data.current(context.goog, "price")
+    print "curr aapl: ", curr_aapl_price
+    print "curr goog: ", curr_goog_price
+    
+    
+    price_hist = data.history(context.aapl, 'price', 5, '1d')
+    mavg_aapl_5 = price_hist.mean()
+    
+    price_hist = data.history(context.goog, 'price', 5, '1d')
+    mavg_goog_5 = price_hist.mean()
+    
+    print "mavg_aapl_5: ", mavg_aapl_5
+    print "mavg_goog_5: ", mavg_goog_5
+    
+    print "price_hist: ", price_hist
 
