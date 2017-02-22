@@ -94,5 +94,14 @@ def handle_data(context,data):
     print "mavg_aapl_5: ", mavg_aapl_5
     print "mavg_goog_5: ", mavg_goog_5
     
-    print "price_hist: ", price_hist
-
+    print price_hist
+    print price_hist[0]
+    print price_hist[1]
+    print price_hist[2]
+    
+    if (curr_aapl_price > mavg_aapl_5 and price_hist[4] < mavg_aapl_5):
+        order(current.aapl, 100)
+    elif(curr_aapl_price < mavg_aapl_5 and price_hist[4] > mavg_aapl_5):
+        order(current.aapl, -100)
+    else:
+        pass
