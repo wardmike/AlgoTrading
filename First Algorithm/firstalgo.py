@@ -100,8 +100,8 @@ def handle_data(context,data):
     print price_hist[2]
     
     if (curr_aapl_price > mavg_aapl_5 and price_hist[4] < mavg_aapl_5):
-        order(current.aapl, 100)
+        order(context.aapl, 100)
     elif(curr_aapl_price < mavg_aapl_5 and price_hist[4] > mavg_aapl_5):
-        order(current.aapl, -100)
+        order(context.aapl, -100)
     else:
         pass
