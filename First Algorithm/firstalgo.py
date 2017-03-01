@@ -12,10 +12,14 @@ def initialize(context):
     print "context: ", context
     context.aapl = sid(24)
     context.goog = sid(46631)
-    context.fb = sid(42950)
-    print "new context: ", context
+    context.bought_aapl = False
+    context.bought_goog = False
+    
+    print "context: ", context
+    
     """
-    Called once at the start of the algorithm.
+    Called once at the start o
+    f the algorithm.
     """   
     # Rebalance every day, 1 hour after market open.
     schedule_function(my_rebalance, date_rules.every_day(), time_rules.market_open(hours=1))
@@ -59,7 +63,7 @@ def my_assign_weights(context, data):
     """
     Assign weights to securities that we want to order.
     """
-    pass #means to be written later
+    pass
  
 def my_rebalance(context,data):
     """
@@ -77,31 +81,36 @@ def handle_data(context,data):
     """
     Called every minute.
     """
-    print context.aapl
-    print context.goog
-    curr_aapl_price = data.current(context.aapl, "price")
-    curr_goog_price = data.current(context.goog, "price")
-    print "curr aapl: ", curr_aapl_price
-    print "curr goog: ", curr_goog_price
+    #print context.aapl
+    #print context.goog
+    curr_aapl_price = data.current(context.aapl,"price")
+    curr_goog_price = data.current(context.goog,"price")
+    #print "curr aapl: ", curr_aapl_price
+    #print "curr goog: ", curr_goog_price
     
+    price_hist_aapl = data.history(context.aapl, 'price', 5, '1d')
+    mavg_aapl_5 = price_hist_aapl.mean()
     
-    price_hist = data.history(context.aapl, 'price', 5, '1d')
-    mavg_aapl_5 = price_hist.mean()
+    price_hist_goog = data.history(context.goog, 'price', 5, '1d')
+    mavg_goog_5 = price_hist_goog.mean()
     
-    price_hist = data.history(context.goog, 'price', 5, '1d')
-    mavg_goog_5 = price_hist.mean()
+    #print "mavg_aapl_5: ", mavg_aapl_5
+    #print "mavg_goog_5: ", mavg_goog_5
+  
     
-    print "mavg_aapl_5: ", mavg_aapl_5
-    print "mavg_goog_5: ", mavg_goog_5
-    
-    print price_hist
-    print price_hist[0]
-    print price_hist[1]
-    print price_hist[2]
-    
-    if (curr_aapl_price > mavg_aapl_5 and price_hist[4] < mavg_aapl_5):
-        order(context.aapl, 100)
-    elif(curr_aapl_price < mavg_aapl_5 and price_hist[4] > mavg_aapl_5):
-        order(context.aapl, -100)
+    if(curr_aapl_price>mavg_aapl_5 and price_hist_aapl[3]<mavg_aapl_5):
+        print "-------------------"
+        print "buying apple at price: ",curr_aapl_price
+        print "buying...5 day mva: ",mavg_aapl_5
+        print "buying...ystdy price was: ",price_hist_aapl[3]
+        order(context.aapl,100)
+    elif(curr_aapl_price<mavg_aapl_5 and price_hist_aapl[3] > mavg_aapl_5):
+        print "shorting apple at price: ",curr_aapl_price
+        print "shorting...ystdy price was: ",price_hist_aapl[3]
+        print "shorting...5 day mva: ",mavg_aapl_5
+        order(context.aapl,-100)
     else:
         pass
+    
+    
+    pass
