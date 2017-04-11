@@ -53,29 +53,9 @@ def before_trading_start(context, data):
   
     # These are the securities that we are interested in trading each day.
     context.security_list = context.output.index
-     
-def my_assign_weights(context, data):
-    """
-    Assign weights to securities that we want to order.
-    """
-    pass
- 
-def my_rebalance(context,data):
-    """
-    Execute orders according to our schedule_function() timing. 
-    """
-    pass
- 
-def my_record_vars(context, data):
-    """
-    Plot variables at the end of each day.
-    """
-    pass
  
 def handle_data(context,data):
-    """
-    Called every minute.
-    """
+    #
     curr_aapl_price = data.current(context.aapl,"price")
 
     price_hist_aapl = data.history(context.aapl, 'price', 5, '1d')

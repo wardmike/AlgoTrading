@@ -8,12 +8,15 @@ from quantopian.pipeline.factors import AverageDollarVolume
 from quantopian.pipeline.filters.morningstar import Q500US
  
 def initialize(context):
+    
     print "hello world"
     print "context: ", context
     context.aapl = sid(24)
     context.goog = sid(46631)
+    context.gain = sid(27373)
     context.bought_aapl = False
     context.bought_goog = False
+    context.bought_gain = False
     
     print "context: ", context
     
@@ -85,6 +88,7 @@ def handle_data(context,data):
     #print context.goog
     curr_aapl_price = data.current(context.aapl,"price")
     curr_goog_price = data.current(context.goog,"price")
+    curr_gain_price = data.current(context.gain,"price")
     #print "curr aapl: ", curr_aapl_price
     #print "curr goog: ", curr_goog_price
     
@@ -93,22 +97,33 @@ def handle_data(context,data):
     
     price_hist_goog = data.history(context.goog, 'price', 5, '1d')
     mavg_goog_5 = price_hist_goog.mean()
+
+    price_hist_gain = data.history(context.gain, 'price', 5, '1d')
+    mavg_gain_5 = price_hist_gain.mean()
     
     #print "mavg_aapl_5: ", mavg_aapl_5
+    #print "curr_aapl_price"
     #print "mavg_goog_5: ", mavg_goog_5
   
     
-    if(curr_aapl_price>mavg_aapl_5 and price_hist_aapl[3]<mavg_aapl_5):
-        print "-------------------"
-        print "buying apple at price: ",curr_aapl_price
-        print "buying...5 day mva: ",mavg_aapl_5
-        print "buying...ystdy price was: ",price_hist_aapl[3]
+    if(curr_aapl_price>mavg_aapl_5 and price_hist_aapl[3]<mavg_aapl_5 and (not context.bought_aapl)):
+        #print "-------------------"
+        #print "buying apple at price: ",curr_aapl_price
+        #print "buying...5 day mva: ",mavg_aapl_5
+        #print "buying...ystdy price was: ",price_hist_aapl[3]
         order(context.aapl,100)
     elif(curr_aapl_price<mavg_aapl_5 and price_hist_aapl[3] > mavg_aapl_5):
-        print "shorting apple at price: ",curr_aapl_price
-        print "shorting...ystdy price was: ",price_hist_aapl[3]
-        print "shorting...5 day mva: ",mavg_aapl_5
+        #print "shorting apple at price: ",curr_aapl_price
+        #print "shorting...ystdy price was: ",price_hist_aapl[3]
+        #print "shorting...5 day mva: ",mavg_aapl_5
         order(context.aapl,-100)
+    else:
+        pass
+
+    if(curr_gain_price>mavg_gain_5 and price_hist_gain[3]<mavg_gain_5 and (not context.bought_gain)):
+        order(context.gain,100)
+    elif(curr_gain_price<mavg_gain_5 and price_hist_gain[3] > mavg_gain_5):
+        order(context.gain,-100)
     else:
         pass
     
